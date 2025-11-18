@@ -25,34 +25,28 @@
     <iframe id="gas-iframe" src="" title="Validasi Cuti Mahasiswa"></iframe>
 
     <script>
-        // 1. Ganti BASE_GAS_URL dengan URL deployment GAS Anda.
-        const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbxdnyM_5dTBj7L_VtALD_M1k7JxRJCVlTlG-163WfGqGThDwdon5agqp-KSfX_910SNOA/exec"; 
-        
-        const iframe = document.getElementById('gas-iframe');
-        
-        // Fungsi untuk mendapatkan parameter 'idSurat' dari URL halaman GitHub Pages.
-        function getQueryParameter(name) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
-        }
+    // 1. Ganti BASE_GAS_URL dengan URL deployment GAS Anda yang sebenarnya!
+    const BASE_GAS_URL = "https://script.google.com/a/macros/undikma.ac.id/s/AKfycbxdnyM_5dTBj7L_VtALD_M1k7JxRJCVlTlG-163WfGqGThDwdon5agqp-KSfX_910SNOA/exec"; 
+    
+    const iframe = document.getElementById('gas-iframe');
+    
+    function getQueryParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
 
-        // Ambil nilai idSurat dari URL GitHub Pages
-        const idSurat = getQueryParameter('idSurat');
+    const idSurat = getQueryParameter('idSurat');
+    // Jika ada parameter tambahan (kepalaBaak, nik), Anda harus mengambilnya di sini:
+    // const kepalaBaak = getQueryParameter('kepalaBaak');
+    
+    let finalUrl = BASE_GAS_URL;
 
-        // 2. Buat URL final yang akan dimuat di iframe.
-        let finalUrl = BASE_GAS_URL;
+    // Pastikan semua parameter diteruskan
+    if (window.location.search) {
+        finalUrl += window.location.search; 
+    }
 
-        if (idSurat) {
-            // Jika idSurat ada di URL GitHub Pages, tambahkan ke URL GAS.
-            finalUrl += `?idSurat=${encodeURIComponent(idSurat)}`;
-        } else {
-            // Jika tidak ada idSurat, tampilkan pesan error bawaan dari GAS 
-            // (karena doGet Anda akan mengembalikan "ID Surat tidak ditemukan").
-            // Atau, Anda bisa mengarahkan ke halaman default BASE_GAS_URL
-        }
-
-        // 3. Muat URL GAS ke dalam iframe
-        iframe.src = finalUrl;
-    </script>
+    iframe.src = finalUrl;
+</script>
 </body>
 </html>
