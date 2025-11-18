@@ -1,16 +1,71 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>validasi cuti</title>
+    <title>Validasi Surat Cuti Undikma</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Mencegah scroll ganda */
+        }
+        #gas-iframe {
+            width: 100%;
+            height: 100vh; /* Memastikan iframe memenuhi seluruh tinggi viewport */
+            border: none;
+        }
+        .loading-message {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            color: #444;
+        }
+    </style>
 </head>
 <body>
-  <iframe 
-    src="https://script.google.com/a/macros/undikma.ac.id/s/AKfycbxdnyM_5dTBj7L_VtALD_M1k7JxRJCVlTlG-163WfGqGThDwdon5agqp-KSfX_910SNOA/exec"
-    width="100%"
-    height="100%"
-    allowfullscreen="true"
-    style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; border: none;">
-  </iframe>
+
+    <div class="loading-message" id="loading">Memuat Validasi...</div>
+
+    <iframe id="gas-iframe" allowfullscreen></iframe>
+
+    <script>
+        // 1. URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA
+        const gasBaseUrl = "https://script.google.com/macros/s/AKfycbxdnyM_5dTBj7L_VtALD_M1k7JxRJCVlTlG-163WfGqGThDwdon5agqp-KSfX_910SNOA/exec"; 
+        
+        // Contoh URL: "https://script.google.com/macros/s/AKfycbxF02Yd...8/exec";
+
+        // 2. Ambil query string dari URL GitHub saat ini (?idSurat=...)
+        const queryString = window.location.search; 
+
+        // 3. Buat URL final untuk iframe
+        let finalUrl = gasBaseUrl;
+
+        // Jika ada parameter, tambahkan ke URL GAS
+        if (queryString) {
+            // Periksa apakah URL GAS sudah memiliki tanda '?' (query string)
+            // Jika sudah ada, gunakan '&' untuk menambahkan parameter baru
+            // Jika belum ada, gunakan '?'
+            const separator = gasBaseUrl.includes('?') ? '&' : '?';
+            finalUrl = gasBaseUrl + separator + queryString.substring(1); // substring(1) untuk menghapus tanda '?' di awal queryString
+        } else {
+            // Jika tidak ada parameter di URL GitHub, kirimkan permintaan ke GAS tanpa parameter
+            // Ini akan menampilkan "ID Surat tidak ditemukan" dari fungsi doGet GAS.
+        }
+
+        // 4. Masukkan URL final ke iframe dan sembunyikan pesan loading
+        document.getElementById('gas-iframe').src = finalUrl;
+        document.getElementById('gas-iframe').onload = function() {
+            document.getElementById('loading').style.display = 'none';
+        };
+
+    </script>
 
 </body>
 </html>
