@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Validasi Surat Cuti UNDIKMA</title>
     <style>
-        /* CSS untuk memastikan iframe mengisi seluruh viewport */
+        /* CSS untuk memastikan iframe mengisi seluruh viewport tanpa margin/padding */
         html, body {
             margin: 0;
             padding: 0;
             height: 100%;
+            width: 100%;
             overflow: hidden; /* Mencegah scroll di halaman utama */
+            box-sizing: border-box;
         }
         #gas-iframe {
             border: none;
@@ -25,28 +27,35 @@
     <iframe id="gas-iframe" src="" title="Validasi Cuti Mahasiswa"></iframe>
 
     <script>
-    // 1. Ganti BASE_GAS_URL dengan URL deployment GAS Anda yang sebenarnya!
-    const BASE_GAS_URL = "https://script.google.com/a/macros/undikma.ac.id/s/AKfycbxdnyM_5dTBj7L_VtALD_M1k7JxRJCVlTlG-163WfGqGThDwdon5agqp-KSfX_910SNOA/exec"; 
-    
-    const iframe = document.getElementById('gas-iframe');
-    
-    function getQueryParameter(name) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(name);
-    }
+        // =================================================================
+        // 1. GANTI DENGAN URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA YANG SEBENARNYA!
+        //    (Contoh: https://script.google.com/macros/s/AKfycb.../exec)
+        // =================================================================
+        const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbxdnyM_5dTBj7L_VtALD_M1k7JxRJCVlTlG-163WfGqGThDwdon5agqp-KSfX_910SNOA/exec"; 
+        
+        const iframe = document.getElementById('gas-iframe');
+        
+        // Dapatkan semua parameter dari URL GitHub Pages (misalnya "?idSurat=FKVsE")
+        const urlParameters = window.location.search;
 
-    const idSurat = getQueryParameter('idSurat');
-    // Jika ada parameter tambahan (kepalaBaak, nik), Anda harus mengambilnya di sini:
-    // const kepalaBaak = getQueryParameter('kepalaBaak');
-    
-    let finalUrl = BASE_GAS_URL;
+        // 2. Gabungkan URL Dasar GAS dengan semua parameter yang didapat
+        let finalUrl = BASE_GAS_URL;
 
-    // Pastikan semua parameter diteruskan
-    if (window.location.search) {
-        finalUrl += window.location.search; 
-    }
+        if (urlParameters) {
+            // Jika ada parameter, tambahkan ke URL GAS
+            finalUrl += urlParameters;
+        } else {
+            // Jika tidak ada parameter (misal, tidak ada ?idSurat), 
+            // tetap arahkan ke URL GAS. Fungsi doGet di GAS Anda akan menangani error "ID Surat tidak ditemukan".
+        }
 
-    iframe.src = finalUrl;
-</script>
+        // 3. Muat URL GAS ke dalam iframe
+        if (BASE_GAS_URL === "https://script.google.com/macros/s/AKfycbxdnyM_5dTBj7L_VtALD_M1k7JxRJCVlTlG-163WfGqGThDwdon5agqp-KSfX_910SNOA/exec") {
+             // Tampilkan pesan error jika user lupa mengganti URL
+            document.body.innerHTML = '<div style="font-family: Arial; text-align: center; padding: 50px;"><h2>⚠️ Error Konfigurasi</h2><p>Mohon ganti variabel <code>BASE_GAS_URL</code> di dalam file <code>index.html</code> ini dengan URL Web App Apps Script Anda yang sudah di-deploy.</p></div>';
+        } else {
+            iframe.src = finalUrl;
+        }
+    </script>
 </body>
 </html>
